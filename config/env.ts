@@ -5,9 +5,9 @@ dotenv.config();
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
-  PORT: z.string().default('5000').transform(Number),
-  MONGO_URI: z.string().min(1, 'MONGO_URI is required'),
-  JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters'),
+  PORT: z.coerce.number().default(5000),
+  MONGO_URI: z.string({ required_error: 'MONGO_URI is required' }).min(1),
+  JWT_SECRET: z.string({ required_error: 'JWT_SECRET is required' }).min(32),
   JWT_EXPIRES_IN: z.string().default('7d'),
   CORS_ORIGIN: z.string().default('http://localhost:5173'),
 });
@@ -15,10 +15,8 @@ const envSchema = z.object({
 const parsed = envSchema.safeParse(process.env);
 
 if (!parsed.success) {
-  console.error('❌ Invalid environment variables:\n');
-  console.error(JSON.stringify(parsed.error.flatten().fieldErrors, null, 2));
+  console.error('❌ Invalid environment variables:\n', parsed.error.flatten().fieldErrors);
   process.exit(1);
 }
 
 export const env = parsed.data;
-export type Env = typeof env;
