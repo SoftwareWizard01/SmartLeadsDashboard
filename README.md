@@ -98,4 +98,3 @@ A production-grade, full-stack lead management system built to demonstrate scala
 - **Performance**: Debounced UI search prevents API spam; Mongoose `.lean()` minimizes memory overhead on reads.
 
 ---
-*Developed as a Pre-Internship Engineering Assignment.*
